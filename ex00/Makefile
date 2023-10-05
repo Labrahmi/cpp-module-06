@@ -6,7 +6,7 @@
 #    By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/01 15:10:35 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/10/05 12:03:06 by ylabrahm         ###   ########.fr        #
+#    Updated: 2023/10/05 19:55:13 by ylabrahm         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ OBJS := $(addprefix obj/, $(OBJS))
 CC = c++
 RM = rm -f
 CFLAGS = -Wall -Wextra -Werror -std=c++98
-NAME = scalar
+NAME = convert
 
 all: $(NAME)
 

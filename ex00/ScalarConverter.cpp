@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 16:16:30 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/10/05 18:10:15 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/10/05 20:59:09 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,12 +176,16 @@ void store_double(t_literal &literal, std::string &string)
 
 void print_literal(t_literal &literal)
 {
+	std::string dot_zero;
+	if ((literal.float_form) == (static_cast<int>(literal.float_form)))
+		dot_zero = ".0";
 	if (isprint(literal.char_form))
 		std::cout << "char:   " << literal.char_form << std::endl;
 	else
-		std::cout << "char:   " << "Non displayable" << std::endl;
+		std::cout << "char:   "
+				  << "Non displayable" << std::endl;
 	std::cout << "int:    " << literal.int_form << std::endl;
-	std::cout << "float:  " << literal.float_form << std::endl;
+	std::cout << "float:  " << literal.float_form << dot_zero << "f" << std::endl;
 	std::cout << "double: " << literal.double_form << std::endl;
 }
 

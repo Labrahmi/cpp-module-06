@@ -6,31 +6,18 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 16:16:30 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/10/05 20:59:09 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/10/06 18:32:36 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScalarConverter.hpp"
-#include <cstdlib>
 
-typedef enum
-{
-	e_CHAR,
-	e_INT,
-	e_FLOAT,
-	e_DOUBLE,
-	e_ERR
-} literal_type;
-
-typedef struct s_literal
-{
-	double double_form;
-	float float_form;
-	char char_form;
-	int int_form;
-	char sign;
-	literal_type type;
-} t_literal;
+double ScalarConverter::double_form = 0.0;
+float ScalarConverter::float_form = 0.0f;
+char ScalarConverter::char_form = 0;
+int ScalarConverter::int_form = 0;
+char ScalarConverter::sign = 'p';
+literal_type ScalarConverter::type = e_ERR;
 
 /*
 ** ------------------------------- CONSTRUCTOR --------------------------------
@@ -90,10 +77,10 @@ int check_err(std::string &string)
 	return ((strange_count > 0) || (f_count > 1) || (dot_count > 1) || (gen_err));
 }
 
-literal_type setLetType(std::string &string, t_literal &literal)
+literal_type ScalarConverter::setLetType(std::string &string)
 {
 	size_t pos;
-	literal.sign = 'p';
+	ScalarConverter::sign = 'p';
 	if (string.length() == 1)
 	{
 		if (string[0] >= '0' && string[0] <= '9')
@@ -107,7 +94,7 @@ literal_type setLetType(std::string &string, t_literal &literal)
 			if (string.length() == 1)
 				return e_ERR;
 			if (string[0] == '-')
-				literal.sign = 'n';
+				ScalarConverter::sign = 'n';
 			string = string.substr(1, (string.length() - 1));
 		}
 		if (check_err(string))
@@ -138,97 +125,123 @@ literal_type setLetType(std::string &string, t_literal &literal)
 	return e_ERR;
 }
 
-void store_char(t_literal &literal, std::string &string)
+void ScalarConverter::store_char(std::string &string)
 {
-	char value = string[0];
-	literal.char_form = static_cast<char>(value);
-	literal.int_form = static_cast<int>(value);
-	literal.float_form = static_cast<float>(value);
-	literal.double_form = static_cast<double>(value);
+	char value = static_cast<char>(string[0]);
+	ScalarConverter::char_form = static_cast<char>(value);
+	ScalarConverter::int_form = static_cast<int>(value);
+	ScalarConverter::float_form = static_cast<float>(value);
+	ScalarConverter::double_form = static_cast<double>(value);
 }
-void store_int(t_literal &literal, std::string &string)
+void ScalarConverter::store_int(std::string &string)
 {
-	try
+	int value;
+	int sign = static_cast<int>((ScalarConverter::sign == 'p') ? 1 : -1);
+	if ((string == "2147483648") && (sign == -1))
+		value = static_cast<int>(-2147483648);
+	else
 	{
-		int value;
-		if (string == "2147483648" && literal.sign == 'n')
-			value = -2147483648;
+		int int_prototype;
+		std::stringstream ss(string);
+		if (ss >> int_prototype)
+			value = static_cast<int>(std::strtol(string.c_str(), NULL, 10) * sign);
 		else
 		{
-			int sign = (literal.sign == 'p') ? 1 : -1;
-			value = std::stoi(string) * (sign);
+			std::cout << "Unexpected error while storing an integer, program exited!" << std::endl;
+			exit(EXIT_FAILURE);
 		}
-		literal.char_form = static_cast<char>(0);
-		if (value >= 0 && value <= 255)
-			literal.char_form = static_cast<char>(value);
-		literal.int_form = static_cast<int>(value);
-		literal.float_form = static_cast<float>(value);
-		literal.double_form = static_cast<double>(value);
 	}
-	catch(const std::exception& e)
+	ScalarConverter::char_form = static_cast<char>(0);
+	if (value >= 0 && value <= 255)
+		ScalarConverter::char_form = static_cast<char>(value);
+	ScalarConverter::int_form = static_cast<int>(value);
+	ScalarConverter::float_form = static_cast<float>(value);
+	ScalarConverter::double_form = static_cast<double>(value);
+}
+
+void ScalarConverter::store_float(std::string &string)
+{
+	float float_prototype;
+	float value;
+	int sign = static_cast<int>((ScalarConverter::sign == 'p') ? 1 : -1);
+	std::stringstream ss(string.substr(0, string.length() - 1));
+	if (ss >> float_prototype)
 	{
-		std::cout << "Error: Unexpected error while storing an integer, program exited\n";
+		value = static_cast<float>(std::strtol(string.c_str(), NULL, 10) * sign);
+		std::cout << value << "\n";
+		exit(10);
+	}
+	else
+	{
+		std::cout << "Unexpected error while storing a float, program exited!" << std::endl;
 		exit(EXIT_FAILURE);
 	}
+	ScalarConverter::char_form = static_cast<char>(0);
+	if (value >= 0 && value <= 255)
+		ScalarConverter::char_form = static_cast<char>(value);
+	ScalarConverter::int_form = static_cast<int>(value);
+	ScalarConverter::float_form = static_cast<float>(value);
+	ScalarConverter::double_form = static_cast<double>(value);
+}
+void ScalarConverter::store_double(std::string &string)
+{
+	double double_prototype;
+	double value;
+	int sign = static_cast<int>((ScalarConverter::sign == 'p') ? 1 : -1);
+	std::stringstream ss(string);
+	if (ss >> double_prototype)
+	{
+		value = static_cast<double>(std::strtol(string.c_str(), NULL, 10) * sign);
+	}
+	else
+	{
+		std::cout << "Unexpected error while storing a double, program exited!" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	ScalarConverter::char_form = static_cast<char>(0);
+	if (value >= 0 && value <= 255)
+		ScalarConverter::char_form = static_cast<char>(value);
+	ScalarConverter::int_form = static_cast<int>(value);
+	ScalarConverter::float_form = static_cast<float>(value);
+	ScalarConverter::double_form = static_cast<double>(value);
 }
 
-void store_float(t_literal &literal, std::string &string)
-{
-	int sign = (literal.sign == 'p') ? 1 : -1;
-	float value = std::stod(string) * (sign);
-	literal.char_form = static_cast<char>(value);
-	literal.int_form = static_cast<int>(value);
-	literal.float_form = static_cast<float>(value);
-	literal.double_form = static_cast<double>(value);
-}
-void store_double(t_literal &literal, std::string &string)
-{
-	int sign = (literal.sign == 'p') ? 1 : -1;
-	double value = std::stod(string) * (sign);
-	literal.char_form = static_cast<char>(value);
-	literal.int_form = static_cast<int>(value);
-	literal.float_form = static_cast<float>(value);
-	literal.double_form = static_cast<double>(value);
-}
-
-void print_literal(t_literal &literal)
+void ScalarConverter::print_literal(void)
 {
 	std::string dot_zero;
-	if ((literal.float_form) == (static_cast<int>(literal.float_form)))
+	if ((ScalarConverter::float_form) == (static_cast<int>(ScalarConverter::float_form)))
 		dot_zero = ".0";
-	if (isprint(literal.char_form))
-		std::cout << "char:   " << literal.char_form << std::endl;
+	if (isprint(ScalarConverter::char_form))
+		std::cout << "char:   " << ScalarConverter::char_form << std::endl;
 	else
-		std::cout << "char:   "
-				  << "Non displayable" << std::endl;
-	std::cout << "int:    " << literal.int_form << std::endl;
-	std::cout << "float:  " << literal.float_form << dot_zero << "f" << std::endl;
-	std::cout << "double: " << literal.double_form << std::endl;
+		std::cout << "char:   " << "Non displayable" << std::endl;
+	std::cout << "int:    " << ScalarConverter::int_form << std::endl;
+	std::cout << "float:  " << ScalarConverter::float_form << dot_zero << "f" << std::endl;
+	std::cout << "double: " << ScalarConverter::double_form << std::endl;
 }
 
 void ScalarConverter::convert(std::string string)
 {
-	t_literal literal;
-	literal.type = setLetType(string, literal);
-	switch (literal.type)
+	ScalarConverter::type = ScalarConverter::setLetType(string);
+	switch (ScalarConverter::type)
 	{
 	case e_CHAR:
-		store_char(literal, string);
+		ScalarConverter::store_char(string);
 		break;
 	case e_INT:
-		store_int(literal, string);
+		ScalarConverter::store_int(string);
 		break;
 	case e_FLOAT:
-		store_float(literal, string);
+		ScalarConverter::store_float(string);
 		break;
 	case e_DOUBLE:
-		store_double(literal, string);
+		ScalarConverter::store_double(string);
 		break;
 	case e_ERR:
 		std::cout << "Invalid Literal Format!" << std::endl;
 		exit(EXIT_FAILURE);
 	}
-	print_literal(literal);
+	print_literal();
 }
 
 /*

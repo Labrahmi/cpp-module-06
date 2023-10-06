@@ -148,13 +148,30 @@ void store_char(t_literal &literal, std::string &string)
 }
 void store_int(t_literal &literal, std::string &string)
 {
-	int sign = (literal.sign == 'p') ? 1 : -1;
-	int value = std::stoi(string) * (sign);
-	literal.char_form = static_cast<char>(value);
-	literal.int_form = static_cast<int>(value);
-	literal.float_form = static_cast<float>(value);
-	literal.double_form = static_cast<double>(value);
+	try
+	{
+		int value;
+		if (string == "2147483648" && literal.sign == 'n')
+			value = -2147483648;
+		else
+		{
+			int sign = (literal.sign == 'p') ? 1 : -1;
+			value = std::stoi(string) * (sign);
+		}
+		literal.char_form = static_cast<char>(0);
+		if (value >= 0 && value <= 255)
+			literal.char_form = static_cast<char>(value);
+		literal.int_form = static_cast<int>(value);
+		literal.float_form = static_cast<float>(value);
+		literal.double_form = static_cast<double>(value);
+	}
+	catch(const std::exception& e)
+	{
+		std::cout << "Error: Unexpected error while storing an integer, program exited\n";
+		exit(EXIT_FAILURE);
+	}
 }
+
 void store_float(t_literal &literal, std::string &string)
 {
 	int sign = (literal.sign == 'p') ? 1 : -1;
@@ -209,8 +226,7 @@ void ScalarConverter::convert(std::string string)
 		break;
 	case e_ERR:
 		std::cout << "Invalid Literal Format!" << std::endl;
-		return;
-		break;
+		exit(EXIT_FAILURE);
 	}
 	print_literal(literal);
 }

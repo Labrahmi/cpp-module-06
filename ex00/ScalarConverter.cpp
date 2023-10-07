@@ -167,9 +167,7 @@ void ScalarConverter::store_float(std::string &string)
 	std::stringstream ss(string.substr(0, string.length() - 1));
 	if (ss >> float_prototype)
 	{
-		value = static_cast<float>(std::strtol(string.c_str(), NULL, 10) * sign);
-		std::cout << value << "\n";
-		exit(10);
+		value = static_cast<float>(std::strtold(string.c_str(), NULL) * sign);
 	}
 	else
 	{
@@ -191,7 +189,7 @@ void ScalarConverter::store_double(std::string &string)
 	std::stringstream ss(string);
 	if (ss >> double_prototype)
 	{
-		value = static_cast<double>(std::strtol(string.c_str(), NULL, 10) * sign);
+		value = static_cast<double>(std::strtold(string.c_str(), NULL) * sign);
 	}
 	else
 	{

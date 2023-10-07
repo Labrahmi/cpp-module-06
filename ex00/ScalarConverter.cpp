@@ -77,10 +77,34 @@ int check_err(std::string &string)
 	return ((strange_count > 0) || (f_count > 1) || (dot_count > 1) || (gen_err));
 }
 
+// -inff, +inff and nanf
+// -inf, +inf and nan
+
+literal_type check_pseudo(std::string &string)
+{
+	if (string == "nan")
+		return e_NAN;
+	if (string == "nanf")
+		return e_NANF;
+	if (string == "-inf")
+		return e_N_INF;
+	if (string == "+inf")
+		return e_P_INF;
+	if (string == "-inff")
+		return e_N_INFF;
+	if (string == "+inff")
+		return e_P_INFF;
+	return e_ERR;
+}
+
 literal_type ScalarConverter::setLetType(std::string &string)
 {
 	size_t pos;
 	ScalarConverter::sign = 'p';
+
+	literal_type pseudo = check_pseudo(string);
+	if (pseudo != e_ERR)
+		return (pseudo);
 	if (string.length() == 1)
 	{
 		if (string[0] >= '0' && string[0] <= '9')
@@ -218,6 +242,42 @@ void ScalarConverter::print_literal(void)
 	std::cout << "double: " << ScalarConverter::double_form << std::endl;
 }
 
+void ScalarConverter::print_pseudo(void)
+{
+	ScalarConverter::char_form = 0;
+	ScalarConverter::int_form = 0;
+
+	switch (ScalarConverter::type)
+	{
+	case e_NAN:
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<double>::quiet_NaN());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<double>::quiet_NaN());
+		break;
+	case e_NANF:
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<float>::quiet_NaN());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<float>::quiet_NaN());
+		break;
+	case e_P_INF:
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<double>::max());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<double>::max());
+		break;
+	case e_P_INFF:
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<float>::max());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<float>::max());
+		break;
+	case e_N_INF:
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<double>::min());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<double>::min());
+		break;
+	case e_N_INFF:
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<float>::min());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<float>::min());
+		break;
+	default:
+		break;
+	}
+}
+
 void ScalarConverter::convert(std::string string)
 {
 	ScalarConverter::type = ScalarConverter::setLetType(string);
@@ -238,6 +298,9 @@ void ScalarConverter::convert(std::string string)
 	case e_ERR:
 		std::cout << "Invalid Literal Format!" << std::endl;
 		exit(EXIT_FAILURE);
+	default:
+		print_pseudo();
+		break;
 	}
 	print_literal();
 }

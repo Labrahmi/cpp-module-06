@@ -17,6 +17,10 @@
 #include <string>
 #include <sstream>
 #include <cstdlib>
+#include <limits>
+
+
+
 
 typedef enum
 {
@@ -24,7 +28,14 @@ typedef enum
 	e_INT,
 	e_FLOAT,
 	e_DOUBLE,
-	e_ERR
+	e_NAN,    // nan
+	e_P_INF,  // +inf
+	e_N_INF,  // -inf
+	// 
+	e_NANF,   // nanf
+	e_P_INFF, // +inff
+	e_N_INFF, // -inff
+	e_ERR,
 } literal_type;
 
 class ScalarConverter
@@ -44,6 +55,7 @@ private:
 	static void store_float(std::string &string);
 	static void store_double(std::string &string);
 	static void print_literal(void);
+	static void print_pseudo(void);
 	static literal_type setLetType(std::string &string);
 	//
 public:

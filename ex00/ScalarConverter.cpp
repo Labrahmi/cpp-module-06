@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 16:16:30 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/10/06 18:32:36 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/10/07 15:05:04 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,6 @@ int check_err(std::string &string)
 	gen_err = (string[i - 1]) && (string[i - 1] == '.');
 	return ((strange_count > 0) || (f_count > 1) || (dot_count > 1) || (gen_err));
 }
-
-// -inff, +inff and nanf
-// -inf, +inf and nan
 
 literal_type check_pseudo(std::string &string)
 {
@@ -247,6 +244,8 @@ void ScalarConverter::print_pseudo(void)
 	ScalarConverter::char_form = 0;
 	ScalarConverter::int_form = 0;
 
+	
+
 	switch (ScalarConverter::type)
 	{
 	case e_NAN:
@@ -258,20 +257,20 @@ void ScalarConverter::print_pseudo(void)
 		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<float>::quiet_NaN());
 		break;
 	case e_P_INF:
-		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<double>::max());
-		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<double>::max());
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<double>::infinity());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<double>::infinity());
 		break;
 	case e_P_INFF:
-		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<float>::max());
-		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<float>::max());
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<float>::infinity());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<float>::infinity());
 		break;
 	case e_N_INF:
-		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<double>::min());
-		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<double>::min());
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<double>::infinity());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<double>::infinity());
 		break;
 	case e_N_INFF:
-		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<float>::min());
-		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<float>::min());
+		ScalarConverter::double_form = static_cast<double>(std::numeric_limits<float>::infinity());
+		ScalarConverter::float_form = static_cast<float>(std::numeric_limits<float>::infinity());
 		break;
 	default:
 		break;

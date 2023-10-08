@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 16:16:35 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/10/06 18:28:09 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/10/08 08:01:56 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ private:
 	static int int_form;
 	static char sign;
 	static literal_type type;
+	static bool is_nan;
 	//
 	static void store_char(std::string &string);
 	static void store_int(std::string &string);

@@ -6,7 +6,7 @@
 /*   By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 16:16:30 by ylabrahm          #+#    #+#             */
-/*   Updated: 2023/10/07 15:05:04 by ylabrahm         ###   ########.fr       */
+/*   Updated: 2023/10/08 08:05:36 by ylabrahm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ float ScalarConverter::float_form = 0.0f;
 char ScalarConverter::char_form = 0;
 int ScalarConverter::int_form = 0;
 char ScalarConverter::sign = 'p';
+bool ScalarConverter::is_nan = false;
 literal_type ScalarConverter::type = e_ERR;
 
 /*
@@ -230,11 +231,19 @@ void ScalarConverter::print_literal(void)
 	std::string dot_zero;
 	if ((ScalarConverter::float_form) == (static_cast<int>(ScalarConverter::float_form)))
 		dot_zero = ".0";
-	if (isprint(ScalarConverter::char_form))
-		std::cout << "char:   " << ScalarConverter::char_form << std::endl;
+	if (ScalarConverter::is_nan)
+	{
+		std::cout << "int:    " << "impossible" << std::endl;
+		std::cout << "char:   " << "impossible" << std::endl;
+	}
 	else
-		std::cout << "char:   " << "Non displayable" << std::endl;
-	std::cout << "int:    " << ScalarConverter::int_form << std::endl;
+	{
+		if (isprint(ScalarConverter::char_form))
+			std::cout << "char:   " << ScalarConverter::char_form << std::endl;
+		else
+			std::cout << "char:   " << "Non displayable" << std::endl;	
+		std::cout << "int:    " << ScalarConverter::int_form << std::endl;
+	}
 	std::cout << "float:  " << ScalarConverter::float_form << dot_zero << "f" << std::endl;
 	std::cout << "double: " << ScalarConverter::double_form << std::endl;
 }
@@ -243,9 +252,7 @@ void ScalarConverter::print_pseudo(void)
 {
 	ScalarConverter::char_form = 0;
 	ScalarConverter::int_form = 0;
-
-	
-
+	is_nan = true;
 	switch (ScalarConverter::type)
 	{
 	case e_NAN:

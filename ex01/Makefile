@@ -6,11 +6,11 @@
 #    By: ylabrahm <ylabrahm@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/01 15:10:35 by ylabrahm          #+#    #+#              #
-#    Updated: 2023/10/07 15:13:21 by ylabrahm         ###   ########.fr        #
+#    Updated: 2023/10/08 07:59:10 by ylabrahm         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = main.cpp
+SRCS = main.cpp Serializer.cpp
 OBJS := $(SRCS:.cpp=.o)
 OBJS := $(addprefix obj/, $(OBJS))
 
